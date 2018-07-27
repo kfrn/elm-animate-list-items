@@ -6,6 +6,7 @@ import Html exposing (Html, button, div, h2, h3, li, p, span, text, ul)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import List.Extra as ListX
+import Tuple
 
 
 ---- MODEL ----
@@ -58,7 +59,7 @@ init =
 
 type Msg
     = Animate Animation.Msg
-    | GreyOut String
+    | GreyOut String Msg
     | RemoveItem String
     | Reset
     | NoOp
@@ -69,17 +70,28 @@ update msg model =
     case msg of
         Animate animMsg ->
             let
-                newModel =
-                    { model
-                        | fruits =
-                            List.map
-                                (updateStyle <| Animation.update animMsg)
-                                model.fruits
-                    }
-            in
-            ( newModel, Cmd.none )
+                updateFruit : Fruit -> ( Fruit, Cmd Msg )
+                updateFruit fruit =
+                    let
+                        ( newStyle, cmd ) =
+                            Animation.Messenger.update animMsg fruit.style
 
-        GreyOut name ->
+                        newFruit =
+                            { fruit | style = newStyle }
+                    in
+                    ( newFruit, cmd )
+
+                newFruits : List Fruit
+                newFruits =
+                    List.map Tuple.first <| List.map updateFruit model.fruits
+
+                commands : List (Cmd Msg)
+                commands =
+                    List.map Tuple.second <| List.map updateFruit model.fruits
+            in
+            ( { model | fruits = newFruits }, Cmd.batch commands )
+
+        GreyOut name msg ->
             case fruitFromName name model.fruits of
                 Just fruit ->
                     let
@@ -87,7 +99,8 @@ update msg model =
                         newStyle f =
                             Animation.interrupt
                                 [ Animation.to
-                                    [ Animation.opacity 0.2 ]
+                                    [ Animation.opacity 0.0 ]
+                                , Animation.Messenger.send msg
                                 ]
                                 f.style
 
@@ -161,9 +174,7 @@ listItem fruit =
     li (Animation.render fruit.style)
         [ span [ class "emoji" ] [ text fruit.emoji ]
         , text fruit.name
-        , button [ class "button", onClick <| GreyOut fruit.name ] [ text "grey out" ]
-
-        -- , button [ class "button", onClick <| RemoveItem fruit ] [ text "❌" ]
+        , button [ class "button", onClick <| GreyOut fruit.name (RemoveItem fruit.name) ] [ text "❌" ]
         ]
 
 
