@@ -17,6 +17,7 @@ body {
     max-width: 50% !important; /* Overriding Bulma */
   }
 }
+
 .demo {
   padding: 0.3em 0;
 }
@@ -27,6 +28,18 @@ body {
 
 .line {
   padding: 0.5em 1em;
+}
+
+.instruction {
+  margin-top: 0.5em;
+}
+
+.reset {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 250px;
+  margin: 0 auto;
 }
 
 ul {

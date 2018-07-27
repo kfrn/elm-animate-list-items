@@ -25,41 +25,30 @@ type alias Fruit =
 
 init : ( Model, Cmd Msg )
 init =
+    let
+        initStyle =
+            Animation.style [ Animation.opacity 1.0 ]
+    in
     ( { fruits =
             [ { name = "pineapple"
               , emoji = "🍍"
-              , style =
-                    Animation.style
-                        [ Animation.opacity 1.0
-                        ]
+              , style = initStyle
               }
             , { name = "watermelon"
               , emoji = "🍉"
-              , style =
-                    Animation.style
-                        [ Animation.opacity 1.0
-                        ]
+              , style = initStyle
               }
             , { name = "apple"
               , emoji = "🍏"
-              , style =
-                    Animation.style
-                        [ Animation.opacity 1.0
-                        ]
+              , style = initStyle
               }
             , { name = "cherries"
               , emoji = "🍒"
-              , style =
-                    Animation.style
-                        [ Animation.opacity 1.0
-                        ]
+              , style = initStyle
               }
             , { name = "pear"
               , emoji = "🍐"
-              , style =
-                    Animation.style
-                        [ Animation.opacity 1.0
-                        ]
+              , style = initStyle
               }
             ]
       }
@@ -73,7 +62,7 @@ init =
 
 type Msg
     = Animate Animation.Msg
-    | GreyOut String Msg
+    | FadeOut String Msg
     | RemoveItem String
     | Reset
     | NoOp
@@ -105,7 +94,7 @@ update msg model =
             in
             ( { model | fruits = newFruits }, Cmd.batch commands )
 
-        GreyOut name msg ->
+        FadeOut name msg ->
             case fruitFromName name model.fruits of
                 Just fruit ->
                     let
@@ -168,7 +157,7 @@ view model =
     let
         instruction =
             if List.isEmpty model.fruits then
-                div []
+                div [ class "reset" ]
                     [ text "All gone!"
                     , button [ class "button", onClick Reset ] [ text "Reset" ]
                     ]
@@ -186,10 +175,10 @@ view model =
             , code [] [ text "RemoveItem" ]
             , text ")"
             ]
-        , h3 [ class "is-size-5 line" ] [ instruction ]
+        , div [ class "is-size-5 line instruction" ] [ instruction ]
         , ul [ class "line" ] (List.map listItem model.fruits)
         , footer [ class "has-background-light source-code" ]
-            [ a [ href "#", class "is-size-4 cursive" ] [ text "source code!" ] ]
+            [ a [ href "https://github.com/kfrn/elm-animate-list-items.git", class "is-size-4 cursive" ] [ text "source code!" ] ]
         ]
 
 
@@ -199,7 +188,12 @@ listItem fruit =
         [ span [ class "has-background-link has-text-white is-size-4 emoji" ] [ text fruit.emoji ]
         , span [ class "fruit-name" ] [ text fruit.name ]
         , span []
-            [ button [ class "button is-narrow", onClick <| GreyOut fruit.name (RemoveItem fruit.name) ] [ text "❌" ] ]
+            [ button
+                [ class "button is-narrow"
+                , onClick <| FadeOut fruit.name (RemoveItem fruit.name)
+                ]
+                [ text "❌" ]
+            ]
         ]
 
 

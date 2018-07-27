@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
   "summary": "Elm Demo",
-  "repository": "https://github.com/kfrn/elm-animate-items-demo.git",
-  "homepage": "https://kfrn.github.io/elm-animate-items-demo",
+  "repository": "https://github.com/kfrn/elm-animate-list-items.git",
+  "homepage": "https://kfrn.github.io/elm-animate-list-items",
   "license": "BSD3",
   "source-directories": ["src"],
   "exposed-modules": [],
