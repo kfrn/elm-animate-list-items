@@ -2,8 +2,8 @@ module Main exposing (..)
 
 import Animation
 import Animation.Messenger
-import Html exposing (Html, button, div, h2, h3, li, p, span, text, ul)
-import Html.Attributes exposing (class)
+import Html exposing (Html, a, button, code, div, footer, h2, h3, li, p, span, text, ul)
+import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick)
 import List.Extra as ListX
 import Tuple
@@ -26,8 +26,15 @@ type alias Fruit =
 init : ( Model, Cmd Msg )
 init =
     ( { fruits =
-            [ { name = "banana"
-              , emoji = "🍌"
+            [ { name = "pineapple"
+              , emoji = "🍍"
+              , style =
+                    Animation.style
+                        [ Animation.opacity 1.0
+                        ]
+              }
+            , { name = "watermelon"
+              , emoji = "🍉"
               , style =
                     Animation.style
                         [ Animation.opacity 1.0
@@ -35,6 +42,13 @@ init =
               }
             , { name = "apple"
               , emoji = "🍏"
+              , style =
+                    Animation.style
+                        [ Animation.opacity 1.0
+                        ]
+              }
+            , { name = "cherries"
+              , emoji = "🍒"
               , style =
                     Animation.style
                         [ Animation.opacity 1.0
@@ -161,20 +175,31 @@ view model =
             else
                 div [] [ text "Here is a list of fruits:" ]
     in
-    div []
-        [ h2 [] [ text "Demo" ]
-        , p [] [ text "elm-style-animation with secondary effects" ]
-        , h3 [] [ instruction ]
-        , ul [] (List.map listItem model.fruits)
+    div [ class "container" ]
+        [ h2 [ class "is-size-1 has-text-link demo cursive" ] [ text "Elm Demo" ]
+        , p [ class "is-size-4 has-background-light line" ]
+            [ code [] [ text "elm-style-animation" ], text " with secondary effects" ]
+        , p [ class "is-size-6 has-background-light line" ]
+            [ text "Animation ("
+            , code [] [ text "FadeOut" ]
+            , text ") then action ("
+            , code [] [ text "RemoveItem" ]
+            , text ")"
+            ]
+        , h3 [ class "is-size-5 line" ] [ instruction ]
+        , ul [ class "line" ] (List.map listItem model.fruits)
+        , footer [ class "has-background-light source-code" ]
+            [ a [ href "#", class "is-size-4 cursive" ] [ text "source code!" ] ]
         ]
 
 
 listItem : Fruit -> Html Msg
 listItem fruit =
-    li (Animation.render fruit.style)
-        [ span [ class "emoji" ] [ text fruit.emoji ]
-        , text fruit.name
-        , button [ class "button", onClick <| GreyOut fruit.name (RemoveItem fruit.name) ] [ text "❌" ]
+    li (Animation.render fruit.style ++ [ class "is-size-6 fruit" ])
+        [ span [ class "has-background-link has-text-white is-size-4 emoji" ] [ text fruit.emoji ]
+        , span [ class "fruit-name" ] [ text fruit.name ]
+        , span []
+            [ button [ class "button is-narrow", onClick <| GreyOut fruit.name (RemoveItem fruit.name) ] [ text "❌" ] ]
         ]
 
 

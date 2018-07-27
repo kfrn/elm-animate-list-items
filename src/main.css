@@ -6,20 +6,58 @@ body {
   color: #293c4b;
 }
 
+@media (min-width: 768px) {
+  .container {
+    max-width: 70%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .container {
+    max-width: 50% !important; /* Overriding Bulma */
+  }
+}
+.demo {
+  padding: 0.3em 0;
+}
+
+.cursive {
+  font-family: "Lobster", cursive;
+}
+
+.line {
+  padding: 0.5em 1em;
+}
+
 ul {
   list-style-type: none;
   margin: 0 auto 0 auto;
   padding: 0;
 }
 
-li {
-  margin: 0.7em auto;
-}
+.fruit {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 
-.button {
-  margin-left: 0.8em;
+  border: 1px solid #3273dc;
+  border-radius: 7px;
+  margin: 0.7em auto;
+  width: 250px;
+  padding: 0.8em;
 }
 
 .emoji {
-  margin-right: 0.8em;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  font-weight: 500;
+}
+
+.fruit-name {
+  width: 110px;
+}
+
+.source-code {
+  padding: 0.8em 0;
 }
