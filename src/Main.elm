@@ -2,9 +2,10 @@ module Main exposing (..)
 
 import Animation
 import Animation.Messenger
-import Html exposing (Html, button, div, h2, h3, img, li, p, span, text, ul)
-import Html.Attributes exposing (class, src)
+import Html exposing (Html, button, div, h2, h3, li, p, span, text, ul)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import List.Extra as ListX
 
 
 ---- MODEL ----
@@ -57,7 +58,8 @@ init =
 
 type Msg
     = Animate Animation.Msg
-    | RemoveItem Fruit
+    | GreyOut String
+    | RemoveItem String
     | Reset
     | NoOp
 
@@ -77,18 +79,47 @@ update msg model =
             in
             ( newModel, Cmd.none )
 
-        RemoveItem fruit ->
-            let
-                otherFruits =
-                    removeFruit fruit model.fruits
-            in
-            ( { model | fruits = otherFruits }, Cmd.none )
+        GreyOut name ->
+            case fruitFromName name model.fruits of
+                Just fruit ->
+                    let
+                        newStyle : Fruit -> Animation.Messenger.State Msg
+                        newStyle f =
+                            Animation.interrupt
+                                [ Animation.to
+                                    [ Animation.opacity 0.2 ]
+                                ]
+                                f.style
+
+                        updatedFruit =
+                            { fruit | style = newStyle fruit }
+
+                        newFruits =
+                            ListX.replaceIf (\f -> f == fruit) updatedFruit model.fruits
+                    in
+                    ( { model | fruits = newFruits }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        RemoveItem name ->
+            case fruitFromName name model.fruits of
+                Just f ->
+                    ( { model | fruits = removeFruit f model.fruits }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
 
         Reset ->
             init
 
         NoOp ->
             ( model, Cmd.none )
+
+
+fruitFromName : String -> List Fruit -> Maybe Fruit
+fruitFromName name allFruits =
+    ListX.find (\f -> f.name == name) allFruits
 
 
 updateStyle : (Animation.Messenger.State Msg -> Animation.Messenger.State Msg) -> Fruit -> Fruit
@@ -130,7 +161,9 @@ listItem fruit =
     li (Animation.render fruit.style)
         [ span [ class "emoji" ] [ text fruit.emoji ]
         , text fruit.name
-        , button [ class "button", onClick <| RemoveItem fruit ] [ text "❌" ]
+        , button [ class "button", onClick <| GreyOut fruit.name ] [ text "grey out" ]
+
+        -- , button [ class "button", onClick <| RemoveItem fruit ] [ text "❌" ]
         ]
 
 
@@ -144,7 +177,7 @@ main =
         { view = view
         , init = init
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
 
 
