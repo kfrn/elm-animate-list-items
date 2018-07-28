@@ -16,6 +16,9 @@ This demo combines both these factors: the ability to perform an animation on an
 
 ### [Try it out!](https://kfrn.github.io/elm-animate-list-items)
 
+Thanks to [akoppela](https://github.com/akoppela) on the Elm Slack for helping me figure out troubleshoot some problems I encountered with translating CSS animations to `elm-style-animation`.
+
+
 ### Setup Info
 
 Dependencies:
