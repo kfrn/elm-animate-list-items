@@ -14,10 +14,9 @@ The exception is [this example](https://github.com/mdgriffith/elm-style-animatio
 
 This demo combines both these factors: the ability to perform an animation on any item in a list, and subsequently execute another action regarding that item.
 
-### [Try it out!](https://kfrn.github.io/elm-animate-list-items)
+Thanks to [akoppela](https://github.com/akoppela) on the Elm Slack for helping me with troubleshooting CSS animations and their translation to `elm-style-animation`.
 
-Thanks to [akoppela](https://github.com/akoppela) on the Elm Slack for helping me figure out troubleshoot some problems I encountered with translating CSS animations to `elm-style-animation`.
-
+### [See the live demo!](https://kfrn.github.io/elm-animate-list-items)
 
 ### Setup Info
 
