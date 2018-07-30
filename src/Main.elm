@@ -27,7 +27,11 @@ init : ( Model, Cmd Msg )
 init =
     let
         initStyle =
-            Animation.style [ Animation.opacity 1.0 ]
+            Animation.style
+                [ Animation.opacity 1.0
+                , Animation.scale3d 1 1 1
+                , Animation.transformOrigin (Animation.percent 50) (Animation.px 0) (Animation.px 0)
+                ]
     in
     ( { fruits =
             [ { name = "pineapple"
@@ -62,7 +66,7 @@ init =
 
 type Msg
     = Animate Animation.Msg
-    | FadeOut String Msg
+    | SlideUp String Msg
     | RemoveItem String
     | Reset
     | NoOp
@@ -94,7 +98,7 @@ update msg model =
             in
             ( { model | fruits = newFruits }, Cmd.batch commands )
 
-        FadeOut name msg ->
+        SlideUp name msg ->
             case fruitFromName name model.fruits of
                 Just fruit ->
                     let
@@ -102,7 +106,9 @@ update msg model =
                         newStyle f =
                             Animation.interrupt
                                 [ Animation.to
-                                    [ Animation.opacity 0.0 ]
+                                    [ Animation.opacity 0
+                                    , Animation.scale3d 1 0 0
+                                    ]
                                 , Animation.Messenger.send msg
                                 ]
                                 f.style
@@ -190,7 +196,7 @@ listItem fruit =
         , span []
             [ button
                 [ class "button is-narrow"
-                , onClick <| FadeOut fruit.name (RemoveItem fruit.name)
+                , onClick <| SlideUp fruit.name (RemoveItem fruit.name)
                 ]
                 [ text "❌" ]
             ]
