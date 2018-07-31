@@ -176,7 +176,7 @@ view model =
             [ code [] [ text "elm-style-animation" ], text " with secondary effects" ]
         , p [ class "is-size-6 has-background-light line" ]
             [ text "Animation ("
-            , code [] [ text "FadeOut" ]
+            , code [] [ text "SlideUp" ]
             , text ") then action ("
             , code [] [ text "RemoveItem" ]
             , text ")"
